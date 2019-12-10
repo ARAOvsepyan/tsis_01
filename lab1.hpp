@@ -7,6 +7,7 @@
 #include <fstream>
 
 const double eps = 0.1;
+std::ofstream out("data.txt");
 
 double fun1(double x)
 {
@@ -15,13 +16,14 @@ double fun1(double x)
 
 void print(double x1, double x2, double fx1, double fx2)
 {
+    
     std::cout << std::fixed;
     std::cout.precision(3);
     if ((x1 > 10) || (x2 > 10)) {
-        std::cout << " | " << x1 << "  | " << x2 << " | " << fx1 << "  | " << fx2 << "  |\n";
+        out <<" | " << x1 << "  | " << x2 << " | " << fx1 << "  | " << fx2 << "  |\n";
     }
     else {
-        std::cout << " | " << x1 << "  | " << x2 << "  | " << fx1 << "  | " << fx2 << "  |\n";
+        out << " | " << x1 << "  | " << x2 << "  | " << fx1 << "  | " << fx2 << "  |\n";
     }
 }
 
@@ -34,7 +36,7 @@ void passive_search(double a, double b) {
     std::cout << "Points " << N << "\n";
     std::cout << "Elements:\n";
     std::cout << "-------------------------\n";
-    for (int i = 1; i <= N; i++)
+    for (auto i = 1; i <= N; i++)
     {
         x.push_back(a + i * length / (N + 1));
         std::cout.setf(std::ios::fixed);
@@ -65,8 +67,9 @@ int fib_num(int n)
 
 void fibonacci_method(double a, double b)
 {
-    std::cout << "\n\n\n\t\t\t\tFibonacci Search:\n\n";
-    std::cout << "---------------------------------------------------------------\n" << "|   a   |   b   |   l   |   x1   |   x2   |  f(x1)  |  f(x2)  |\n";
+    out << "\n\n\n\t\t\t\tFibonacci Search:\n\n";
+    out << "-----------------------------------------------------------------------\n" 
+        << "|   k   |   ak  |   bk  |   lk  |   x1   |   x2   |  f(x1)  |  f(x2)  |\n";
 
     double x1, x2, _x, xf1, xf2;
     int k(0);
@@ -85,38 +88,36 @@ void fibonacci_method(double a, double b)
     xf2 = fun1(x2);
 P:
     ++k;
-    std::cout.setf(std::ios::fixed);
-    std::cout << std::setprecision(3);
-    std::cout << "---------------------------------------------------------------\n";
+    out.setf(std::ios::fixed);
+    out << std::setprecision(3);
+    out << "-----------------------------------------------------------------------\n";
     if (b > 10) {
-        std::cout << "| " << a << " | " << b << "| " << (b - a);
+        out << "|   " << k << "   | " << a << " | " << b << "| " << (b - a);
     }
     else {
-        std::cout << "| " << a << " | " << b << " | " << (b - a);
+        out << "|   " << k << "   | " << a << " | " << b << " | " << (b - a);
     }
-    if (xf1 >= xf2)
-    {
+    if (xf1 >= xf2) {
         a = x1;
         x1 = x2;
         xf1 = xf2;
         x2 = a + (double)fib_num(N - k - 1) / fib_num(N - k) * (b - a) + ((N - k) & 1 ? -1 : 1) * eps / fib_num(N - k);
         xf2 = fun1(x2);
-    }
-    else
-    {
+    } else {
         b = x2;
         x2 = x1;
         xf2 = xf1;
         x1 = a + (double)fib_num(N - k - 2) / fib_num(N - k) * (b - a) - ((N - k) & 1 ? -1 : 1) * eps / fib_num(N - k);
         xf1 = fun1(x1);
     }
+ 
     print(x1, x2, fun1(x1), fun1(x2));
 
     if (fabs(b - a) <= eps)
     {
-        std::cout << "---------------------------------------------------------------\n";
+        out << "-----------------------------------------------------------------------\n";
         _x = (a + b) / 2;
-        std::cout << "Extremum: x = " << _x;
+        out << "Extremum: x = " << _x;
     }
     else
         goto P;
